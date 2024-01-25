@@ -64,4 +64,31 @@ const deleteTour = (req, res, next) => {
   });
 };
 
-module.exports = { getAllTours, getTour, createTour, updateTour, deleteTour };
+const checkId = (req, res, next, value) => {
+  if (tours.length <= +value)
+    return res.status(404).json({
+      status: 'fail',
+      message: 'invalid ID',
+    });
+  next();
+};
+
+const checkCreateTourBody = (req, res, next) => {
+  const body = req.body;
+  if (body && body.name && body.price) next();
+  else
+    return res.status(400).json({
+      status: 'fail',
+      message: 'invalid request!',
+    });
+};
+
+module.exports = {
+  getAllTours,
+  getTour,
+  createTour,
+  updateTour,
+  deleteTour,
+  checkId,
+  checkCreateTourBody,
+};

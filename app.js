@@ -9,17 +9,17 @@ const userRoute = require('./routes/userRoute');
 const app = express();
 
 app.use(express.json());
-app.use(morgan('dev'));
+
+process.env.NODE_ENV === 'development' && app.use(morgan('dev'));
+app.use(express.static(`${__dirname}/public`));
+
+app.use((req, res, next) => {
+  req.time = Date.now();
+  console.log(req.ip);
+  next();
+});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRoute);
 
-const PORT = 3000;
-
-app.use((req, res, next) => {
-  req.time = Date.now();
-  console.log(req.time);
-  next();
-});
-
-app.listen(PORT, () => console.log('App is running on port', PORT));
+module.exports = app;
