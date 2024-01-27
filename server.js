@@ -1,7 +1,18 @@
 require('dotenv').config({ path: './config.env' });
+const mongoose = require('mongoose');
+
 const app = require('./app');
 
-// console.log(process.env);
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+};
+mongoose
+  .connect(process.env.MONGODBURI, mongooseOptions)
+  .then((con) => console.log('DB Connected'))
+  .catch((e) => console.log(e, 'DB Connection failed'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
